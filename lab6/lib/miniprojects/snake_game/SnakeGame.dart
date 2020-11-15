@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:math' as Math;
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'DirectionEnum.dart';
 import 'Controller.dart';
@@ -12,13 +12,14 @@ class SnakeGame extends StatefulWidget {
   _SnakeGameState createState() => _SnakeGameState();
 }
 
-// @todo generate food & increase size
 class _SnakeGameState extends State<SnakeGame> {
   final int fieldSize = 10;
-  int _time = 0;
+  final Random rng = new Random();
   Timer _movingTimer;
+  int _time = 0;
 
   Snake snake = Snake();
+  List<int> foodPositions = [];
 
   @override
   void initState() {
@@ -34,8 +35,10 @@ class _SnakeGameState extends State<SnakeGame> {
 
     // iteration
     _movingTimer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+      // update snake position
       snake.updatePositions(_time);
 
+      // check game end
       if (snake.head.x < 0 ||
           snake.head.x > fieldSize ||
           snake.head.y < 0 ||
@@ -43,6 +46,59 @@ class _SnakeGameState extends State<SnakeGame> {
         print("You lose!");
         timer.cancel();
         return;
+      }
+
+      // check if we can eat food
+      try {
+        var head = snake.head;
+        foodPositions.firstWhere((f) =>
+            (f == (head.positionInArr(fieldSize) - fieldSize) &&
+                head.direction == Direction.Up) ||
+            (f == (head.positionInArr(fieldSize) + fieldSize) &&
+                head.direction == Direction.Down) ||
+            (f == (head.positionInArr(fieldSize) - 1) &&
+                head.direction == Direction.Left) ||
+            (f == (head.positionInArr(fieldSize) + 1) &&
+                head.direction == Direction.Right));
+
+        // @todo update rotationQueue
+        switch (head.direction) {
+          case Direction.Up:
+            snake.cells.insert(0, SnakeCell(head.x, head.y - 1, Direction.Up));
+            break;
+          case Direction.Down:
+            snake.cells
+                .insert(0, SnakeCell(head.x, head.y + 1, Direction.Down));
+            break;
+          case Direction.Right:
+            snake.cells
+                .insert(0, SnakeCell(head.x - 1, head.y, Direction.Right));
+            break;
+          case Direction.Left:
+            snake.cells
+                .insert(0, SnakeCell(head.x + 1, head.y, Direction.Left));
+            break;
+          default:
+            break;
+        }
+      } catch (err) {}
+
+      // generate food
+      if (_time % 5 == 0) {
+        int freePos = null;
+
+        while (freePos == null) {
+          var pos = rng.nextInt(100);
+
+          try {
+            snake.cells
+                .firstWhere((cell) => cell.positionInArr(fieldSize) == pos);
+          } catch (err) {
+            freePos = pos;
+          }
+        }
+
+        foodPositions.add(freePos);
       }
 
       setState(() => _time++);
@@ -60,7 +116,7 @@ class _SnakeGameState extends State<SnakeGame> {
             child: GridView.count(
               padding: EdgeInsets.symmetric(vertical: 100, horizontal: 20),
               crossAxisCount: 10,
-              children: createPlayField(fieldSize, snake),
+              children: createPlayField(fieldSize, snake, foodPositions),
             ),
           ),
           Padding(
