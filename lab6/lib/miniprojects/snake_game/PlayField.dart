@@ -11,8 +11,6 @@ List<Widget> createPlayField(
     );
   });
 
-  print(foodPositions);
-
   foodPositions.forEach((food) {
     list[food] = Container(
       child: Card(
@@ -21,13 +19,24 @@ List<Widget> createPlayField(
     );
   });
 
-  snake.cells.forEach((cell) {
-    list[cell.positionInArr(fieldSize)] = Container(
+  list[snake.head.positionInArr(fieldSize)] = Container(
+    child: Card(
+      color: Colors.teal[900],
+    ),
+  );
+  for (int i = 1; i < snake.cells.length - 1; i++) {
+    list[snake.cells[i].positionInArr(fieldSize)] = Container(
       child: Card(
-        color: Colors.teal[800],
+        color: Colors.teal,
       ),
     );
-  });
+  }
+
+  list[snake.tail.positionInArr(fieldSize)] = Container(
+    child: Card(
+      color: Colors.teal[200],
+    ),
+  );
 
   return list;
 }

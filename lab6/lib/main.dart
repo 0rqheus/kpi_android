@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'miniprojects/snake_game/SnakeGame.dart';
+import 'miniprojects/infection_game/Infection.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Lab 6',
-      home: SnakeGame(),
+      home: InfectionGame(),
     );
   }
 }
