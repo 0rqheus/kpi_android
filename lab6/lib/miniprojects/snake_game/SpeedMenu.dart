@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/miniprojects/snake_game/Game.dart';
 
 class SpeedMenu extends StatelessWidget {
   final List<String> speedModes = <String>['Slow', 'Normal', 'Fast'];
@@ -17,8 +18,13 @@ class SpeedMenu extends StatelessWidget {
             return FlatButton(
               height: 50,
               color: Colors.blue,
-              child: Center(child: Text(speedModes[index])),
-              onPressed: () => Navigator.pushNamed(context, '/game'),
+              child: Center(
+                  child: Text(
+                speedModes[index],
+                style: TextStyle(color: Colors.white),
+              )),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Game(speed[index]))),
             );
           },
           separatorBuilder: (BuildContext context, int index) =>

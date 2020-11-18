@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'miniprojects/infection_game/Infection.dart';
+import 'miniprojects/infection_game/InfectionGame.dart';
 
 void main() {
   runApp(MyApp());

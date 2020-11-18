@@ -96,18 +96,18 @@ class _GameState extends State<Game> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Playing"),
+          title: Text(title),
         ),
         body: Column(children: [
           Expanded(
             child: GridView.count(
-              padding: EdgeInsets.symmetric(vertical: 100, horizontal: 20),
+              padding: EdgeInsets.fromLTRB(20, 50, 20, 50),
               crossAxisCount: fieldSize,
               children: createPlayField(fieldSize, snake, foodPositions),
             ),
           ),
           Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.only(bottom: 50),
               child: Controller((direction) => snake.move(direction, _time)))
         ]),
         backgroundColor: Colors.grey[300]);
